@@ -18,6 +18,8 @@ class UserRegisterApiTest(ApiTestCase):
         self.assert_api_exception(response=response, error_class=InvalidFullNameException)
 
     def test_post_with_correct_params_creates_account(self):
+        total_user_extra = UserExtras.objects.count()
+
         valid_data = {'full_name': 'Hassan Khalid',
                       'date_of_birth': '1099-10-10',
                       'username': 'h.scorpion.k',
@@ -30,4 +32,4 @@ class UserRegisterApiTest(ApiTestCase):
         response = self.client.post(path=self.path, data=json.dumps(valid_data), content_type='application/json')
         self.assertEqual(201, response.status_code)
         self.assertEqual(1, User.objects.count())
-        self.assertEqual(1, UserExtras.objects.count())
+        self.assertEqual(total_user_extra + 1, UserExtras.objects.count())
